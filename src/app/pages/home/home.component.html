@@ -1,0 +1,316 @@
+<div class="m-5 animated fadeIn">
+    <h1>
+        Tecnica App
+    </h1>
+    <div class="btn btn-group">
+        <button class="btn btn-danger" (click)="logout()">Cerrar Sessión</button>
+        <button *ngIf="!buscarCompany"class="btn btn-success"  (click)="buscarCompany=!buscarCompany">Buscar</button>
+    </div>
+    
+
+    <hr>
+    
+
+    <form *ngIf="buscarCompany" class="form-inline mt-5 my-3 my-lg-0" (ngSubmit)="buscarEmpresa(f)" #f="ngForm">
+        <div class="row">
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <h2>
+                        Inscripción al servicio
+                    </h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-10">
+                    <label for=""> Ingrese el NIT de la empresa natural o juridica para la que se realizará el trámite, sin incluir el digito de verificación. Luego selecione <strong>Buscar</strong> para completar la solicitud del NIT</label>
+                    <input
+                        class="form-control mr-sm-3"
+                        type="number"
+                        required
+                        pattern="^[0-9]*$$"
+                        placeholder="Buscar Empresa"
+                        aria-label="Search"
+                        name="empresa"
+                        [(ngModel)]="idEmpresa"
+                    />
+                    
+                </div>
+                <button class="btn btn-success col-md-2" type="submit">
+                    <i class="fa fa-search"></i> Buscar
+                  </button>
+            </div>
+        </div>
+        
+      </form>
+
+      <form *ngIf="!buscarCompany" class="form-inline mt-5 my-3 my-lg-0" (ngSubmit)="actualizarEmpresa(form)" #form="ngForm">
+       
+        <div class="row">
+            <div class="form-group col-md-12">
+                <h2>
+                    Información General de la Empresa
+                </h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Identification Type:</label>
+                <div class="col-8">
+                  <select
+                    class="form-control"
+                    [disabled]="typeIdentification.length === 0"
+                    name="paisCmb"
+                    [(ngModel)]="company.identificationType"
+                    (change)="onChange($event.target.value)"
+                    required
+                    [class.is-invalid]="
+                      (typeCmb.invalid && typeCmb.touched) ||
+                      (form.submitted && typeCmb.invalid)
+                    "
+                    #typeCmb="ngModel"
+                  >
+                    <option *ngFor="let type of typeIdentification" [value]="type.idTypeIdentification">
+                      {{ type.description }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-4 col-form-label">Identification number: </label>
+                <div class="col-8">
+                  <input
+                    class="form-control"
+                    [(ngModel)]="company.identificacionNumber"
+                    name="identificacionNumber"
+                    readonly                
+                    required
+                    pattern="^[0-9]*$$"
+                    type="number"
+                    [class.is-invalid]="
+                      (identificacionNumber.invalid && identificacionNumber.touched) ||
+                      (form.submitted && identificacionNumber.invalid)
+                    "
+                    #identificacionNumber="ngModel"
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="
+                      (identificacionNumber.invalid && identificacionNumber.touched) ||
+                      (form.submitted && identificacionNumber.invalid)
+                    "
+                  >
+                    El número de identificación es obligatorio
+                  </small>
+                </div>
+              </div>
+
+
+            <div  *ngIf="visible" class="form-group row">
+                <label class="col-4 col-form-label">Company Name: </label>
+                <div class="col-8">
+                  <input
+                    class="form-control"
+                    [(ngModel)]="company.companyName"
+                    name="companyName"
+                    placeholder="Company name"                    
+                    required
+                    type="text"
+                    [class.is-invalid]="
+                      (companyName.invalid && companyName.touched) ||
+                      (form.submitted && companyName.invalid)
+                    "
+                    #companyName="ngModel"
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="
+                      (companyName.invalid && companyName.touched) ||
+                      (form.submitted && companyName.invalid)
+                    "
+                  >
+                    Ingrese Por favor nombre de la empresa
+                  </small>
+                </div>
+              </div>
+
+              <div *ngIf="!visible" class="form-group row">
+                <label class="col-4 col-form-label">First Name: </label>
+                <div class="col-8">
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="company.firstName"
+                    name="firstName"
+                    placeholder="Primer Nombre"
+                    
+                    required
+                    [class.is-invalid]="
+                      (firstName.invalid && firstName.touched) ||
+                      (form.submitted && firstName.invalid)
+                    "
+                    #firstName="ngModel"
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="
+                      (firstName.invalid && firstName.touched) ||
+                      (form.submitted && firstName.invalid)
+                    "
+                  >
+                    Ingrese Por favor nombre el primer nombre
+                  </small>
+                </div>
+              </div>
+
+              <div *ngIf="!visible" class="form-group row">
+                <label class="col-4 col-form-label">Second Name: </label>
+                <div class="col-8">
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="company.secondName"
+                    name="secondName"
+                    placeholder="Second name"
+                    
+                    required
+                    [class.is-invalid]="
+                      (secondName.invalid && secondName.touched) ||
+                      (form.submitted && secondName.invalid)
+                    "
+                    #secondName="ngModel"
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="
+                      (secondName.invalid && secondName.touched) ||
+                      (form.submitted && secondName.invalid)
+                    "
+                  >
+                    Ingrese Por favor el segundo nombre
+                  </small>
+                </div>
+              </div>
+
+              <div *ngIf="!visible" class="form-group row">
+                <label class="col-4 col-form-label">First Last Name: </label>
+                <div class="col-8">
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="company.fisrtLastName"
+                    name="fisrtLastName"
+                    placeholder="fisrt Last name"
+                    
+                    required
+                    [class.is-invalid]="
+                      (fisrtLastName.invalid && fisrtLastName.touched) ||
+                      (form.submitted && fisrtLastName.invalid)
+                    "
+                    #fisrtLastName="ngModel"
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="
+                      (fisrtLastName.invalid && fisrtLastName.touched) ||
+                      (form.submitted && fisrtLastName.invalid)
+                    "
+                  >
+                    Ingrese Por favor el primer apellido
+                  </small>
+                </div>
+              </div>
+
+              <div *ngIf="!visible" class="form-group row">
+                <label class="col-4 col-form-label">Second Last Name: </label>
+                <div class="col-8">
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="company.secondLastName"
+                    name="secondLastName"
+                    placeholder="Second Last name"
+                    
+                    required
+                    [class.is-invalid]="
+                      (secondLastName.invalid && secondLastName.touched) ||
+                      (form.submitted && secondLastName.invalid)
+                    "
+                    #secondLastName="ngModel"
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="
+                      (secondLastName.invalid && secondLastName.touched) ||
+                      (form.submitted && secondLastName.invalid)
+                    "
+                  >
+                    Ingrese Por favor el segundo apellido
+                  </small>
+                </div>
+              </div>
+
+
+              <div class="form-group row">
+                <label class="col-4 col-form-label">Email</label>
+                <div class="col-8">
+                  <input
+                    class="form-control"
+                    type="email"
+                    [(ngModel)]="company.email"
+                    name="correo"
+                    placeholder="coreo@coreo.com"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                    required
+                    [class.is-invalid]="
+                      (correoTxt.invalid && correoTxt.touched) ||
+                      (form.submitted && correoTxt.invalid)
+                    "
+                    #correoTxt="ngModel"
+                  />
+                  <small
+                    class="form-text text-danger"
+                    *ngIf="
+                      (correoTxt.invalid && correoTxt.touched) ||
+                      (form.submitted && correoTxt.invalid)
+                    "
+                  >
+                    Ingresa un correo válido
+                  </small>
+                </div>
+              </div>
+
+
+              <div class="form-group row">
+                <label class="col-10 col-form-label">Autorizo el envío de mensajes a la siguiente dirección de correo electrónico: </label>
+                <div class="col-md-2" >
+                    <input type="checkbox"
+                  
+                    [checked]="company.authorizeEmail"
+                     (change)="company.authorizeEmail = !company.authorizeEmail">
+               
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-10 col-form-label">Autorizo el envío de mensajes al celular provisto: </label>
+                <div class="col-md-2" >
+                    <input type="checkbox"
+                  
+                    [checked]="company.authorizeCellPone"
+                     (change)="company.authorizeCellPone = !company.authorizeCellPone">
+               
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="input-group col-md-12">
+                  <button type="submit" class="btn btn-outline-primary btn-block form-control">
+                    Actualizar
+                  </button>
+                </div>
+              </div>
+        </div>
+        
+      </form>
+</div>
